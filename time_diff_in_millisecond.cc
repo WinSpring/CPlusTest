@@ -27,7 +27,7 @@ int main(){
   int milli1 = curTime1.tv_usec / 1000;
 
   printf("time difference =  %d\n",milli1-milli);
-
+  printf("time difference in Microsecond =  %ld\n",curTime1.tv_usec - curTime.tv_usec);
 
   return 0;
 }
