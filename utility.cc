@@ -12,12 +12,12 @@ public:
 
 // Functions for linked list implementation.
   Utility();
-  void append(int* data);
-  void add(int* data);
-  void addafter(int* data, int loc);
+  void append(int MR, int hopcount, int* data);
+  void add(int MR, int hopcount, int* data);
+  void addafter(int MR, int hopcount, int* data, int loc);
   int count();
-  void insert(int* data);
-  int deleteNode(int* data);
+  void insert(int MR, int hopcount, int* data);
+  int deleteNode(int MR);
   void display(struct node* r);
 
 //function for set (difference, intersection, union)
@@ -27,7 +27,9 @@ public:
 // node of a linked list
 struct node
 {
-    int* data;//data is normally an array of int.
+    int MR;//multicast router
+    int hopcount;
+    int* data;//data is destination list, which is an array of int.
     struct node *next;
 }*head;
 
@@ -35,11 +37,13 @@ Utility::Utility(){
 
 }
 
-void Utility::append(int* data )
+void Utility::append(int MR, int hopcount, int* data)
 {
     struct node *temp,*right;
     temp= (struct node *)malloc(sizeof(struct node));
-    temp->data=data;
+    temp->MR = MR;
+    temp->hopcount = hopcount;
+    temp->data = data;
     right=(struct node *)head;
     while(right->next != NULL)
       right=right->next;
@@ -51,10 +55,12 @@ void Utility::append(int* data )
 
 
 
-void Utility::add( int* data )
+void Utility::add(int MR, int hopcount, int* data )
 {
     struct node *temp;
     temp=(struct node *)malloc(sizeof(struct node));
+    temp->MR = MR;
+    temp->hopcount = hopcount;
     temp->data=data;
     if (head== NULL)
     {
@@ -67,7 +73,7 @@ void Utility::add( int* data )
       head=temp;
     }
 }
-void Utility::addafter(int* data, int loc)
+void Utility::addafter(int MR, int hopcount, int* data, int loc)
 {
     int i;
     struct node *temp,*left,*right;
@@ -78,6 +84,8 @@ void Utility::addafter(int* data, int loc)
       right=right->next;
     }
     temp=(struct node *)malloc(sizeof(struct node));
+    temp->MR = MR;
+    temp->hopcount = hopcount;
     temp->data=data;
     left->next=temp;
     left=temp;
@@ -99,41 +107,41 @@ int Utility::count()
 } 
 
 
-void Utility::insert(int* data)
+void Utility::insert(int MR, int hopcount, int* data) //insert new node based on hopcount, node with larger hopcount has higher priority.
 {
     int c=0;
     struct node *temp;
     temp=head;
     if(temp==NULL)
     {
-      add(data);
+      add(MR, hopcount, data);
     }
     else
     {
       while(temp!=NULL)
       {
-        if(temp->data[0]<data[0])
+        if(temp->hopcount > hopcount)
           c++;
         temp=temp->next;
       }
     if(c==0)
-        add(data);
+        add(MR, hopcount, data);
     else if(c<count())
-        addafter(data,++c);
+        addafter(MR, hopcount, data, ++c);
     else
-        append(data);
+        append(MR, hopcount, data);
     }
 }
 
 
 
-int Utility::deleteNode(int* data)
+int Utility::deleteNode(int MR) //delete node based on MR (Multicast Router), because MR is the unique value (the key) for each Node in the linked list
 {
     struct node *temp, *prev;
     temp=head;
     while(temp!=NULL)
     {
-      if(temp->data[0]==data[0])
+      if(temp->MR==MR)
       {
         if(temp==head)
         {
@@ -168,6 +176,7 @@ void Utility::display(struct node *r)
     while(r!=NULL)
     {
       int i = 0;
+      printf("MR: %d, hopcount: %d, dest list:", r->MR, r->hopcount);
       while(r->data[i] != -1)
         printf("%d ",r->data[i++]);
       printf("\n");
@@ -184,7 +193,7 @@ int  main()
     head=NULL;
 //    while(1)
 //    {
-      printf("\nList Operations\n");
+/*      printf("\nList Operations\n");
       printf("===============\n");
       printf("1.Insert\n");
       printf("2.Display\n");
@@ -192,19 +201,26 @@ int  main()
       printf("4.Delete\n");
       printf("5.Exit\n");
       printf("Enter your choice : ");
+*/
+      int MR1 = 3;
+      int hopcount1 = 3;
+      int a[] = {1,2,3,4,5,-1};//array must be ended by -1.
 
-      int a[] = {1,2,3,4,5,-1};//array must be ended by -1 (for display function to work)
+      int MR2 = 4;
+      int hopcount2 = 2;
       int b[] = {11,12,13,14,15,-1};
-      int c[] = {111,112,113,114,115,-1};
 
+      int MR3 = 6;
+      int hopcount3 = 4;
+      int c[] = {111,112,113,114,115,-1};
 			      
       Utility* obj = new Utility();
-      obj->insert(a);
-      obj->insert(b);
-      obj->insert(c);
-      obj->insert(a);
+      obj->insert(MR1, hopcount1, a);
+      obj->insert(MR2, hopcount2, b);
+      obj->insert(MR3, hopcount3, c);
+      obj->insert(MR1, hopcount1, a);
       obj->display(n);
-      obj->deleteNode(b);
+      obj->deleteNode(4);
       obj->display(n);
 /*
       if(scanf("%d",&i)<=0){
