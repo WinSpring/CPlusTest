@@ -167,7 +167,10 @@ void Utility::display(struct node *r)
     }
     while(r!=NULL)
     {
-      printf("%d ",r->data[0]);
+      int i = 0;
+      while(r->data[i] != -1)
+        printf("%d ",r->data[i++]);
+      printf("\n");
       r=r->next;
     }
     printf("\n");
@@ -190,11 +193,12 @@ int  main()
       printf("5.Exit\n");
       printf("Enter your choice : ");
 
-      int a[] = {1,2,3,4,5};
-      int b[] = {11,12,13,14,15};
-      int c[] = {111,112,113,114,115};
+      int a[] = {1,2,3,4,5,-1};//array must be ended by -1 (for display function to work)
+      int b[] = {11,12,13,14,15,-1};
+      int c[] = {111,112,113,114,115,-1};
+
 			      
-      Utility* obj = new Utility;
+      Utility* obj = new Utility();
       obj->insert(a);
       obj->insert(b);
       obj->insert(c);
